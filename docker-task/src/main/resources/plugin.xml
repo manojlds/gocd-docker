@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<go-plugin id="docker-task" version="1">
+  <about>
+      <name>Docker Task</name>
+      <version>0.1.0</version>
+      <target-go-version>14.4.0</target-go-version>
+      <description>Docker task to build, run with and push images</description>
+      <vendor>
+          <name>manojlds</name>
+          <url>www.stacktoheap.com</url>
+      </vendor>
+      <target-os>
+          <value>Linux</value>
+          <value>Mac OS X</value>
+      </target-os>
+  </about>
+</go-plugin>
