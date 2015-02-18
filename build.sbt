@@ -11,7 +11,7 @@ val mockito = "org.mockito" % "mockito-all" % "1.9.0" % Test
 
 val appVersion = sys.env.get("SNAP_PIPELINE_COUNTER") orElse sys.env.get("GO_PIPELINE_LABEL") getOrElse "1.0.0-SNAPSHOT"
 
-lazy val root = project in file(".") aggregate(docker-task)
+lazy val root = project in file(".") aggregate(dockerTask)
 
 lazy val commonSettings = Seq(
   organization := "com.stacktoheap",
@@ -20,10 +20,14 @@ lazy val commonSettings = Seq(
   unmanagedBase := file(".") / "lib",
   libraryDependencies ++= Seq(
     apacheCommons, commonsIo, goPluginLibrary, junit, hamcrest, mockito
-  )
+  ),
+  variables in EditSource += ("version", appVersion),
+  targetDirectory in EditSource <<= baseDirectory(_ / "target" / "transformed"),
+  sources in EditSource <++= baseDirectory.map(d => (d / "template" / "plugin.xml").get),
+  unmanagedResourceDirectories in Compile += { baseDirectory.value / "target" / "transformed" }
 )
 
-lazy val fetch = (project in file("docker-task")).
+lazy val dockerTask = (project in file("docker-task")).
   settings(commonSettings: _*).
   settings(
     name := "docker-task",
