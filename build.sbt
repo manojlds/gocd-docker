@@ -1,6 +1,7 @@
 val ant = "org.apache.ant" % "ant" % "1.9.4"
 val apacheCommons = "org.apache.commons" % "commons-lang3" % "3.1"
 val commonsIo = "commons-io" % "commons-io" % "1.3.2"
+val dockerClient = "com.spotify" % "docker-client" % "2.7.7"
 val goPluginLibrary = "cd.go.plugin" % "go-plugin-api" % "14.4.0" % Provided
 
 val junit = "junit" % "junit" % "4.10" % Test
