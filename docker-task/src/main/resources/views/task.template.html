@@ -38,7 +38,7 @@
     <div class="checkbox_row">
         <input id="IsDockerPush2" type="checkbox" ng-model="IsDockerPush2" ng-init="IsDockerPush2 = IsDockerPush" ng-change="IsDockerPush = IsDockerPush2" ng-true-value="true" ng-false-value="false">
         <input id="IsDockerPush" type="hidden" ng-model="IsDockerPush" value="{{IsDockerPush}}">
-        <label for="IsDockerPush">Run command in docker image</label>
+        <label for="IsDockerPush">Push image to registry</label>
     </div>
 </div>
 <div class="docker_build" ng-show="IsDockerPush == 'true'">
