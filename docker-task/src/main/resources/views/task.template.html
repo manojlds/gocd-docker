@@ -34,3 +34,17 @@
         <textarea ng-model="DockerRunArguments" wrap="off" style="width: 250px; resize: both;" cols="58" autocomplete="off"></textarea>
     </div>
 </div>
+<div class="form_item_block">
+    <div class="checkbox_row">
+        <input id="IsDockerPush2" type="checkbox" ng-model="IsDockerPush2" ng-init="IsDockerPush2 = IsDockerPush" ng-change="IsDockerPush = IsDockerPush2" ng-true-value="true" ng-false-value="false">
+        <input id="IsDockerPush" type="hidden" ng-model="IsDockerPush" value="{{IsDockerPush}}">
+        <label for="IsDockerPush">Run command in docker image</label>
+    </div>
+</div>
+<div class="docker_build" ng-show="IsDockerPush == 'true'">
+    <div class="form_item_block" >
+        <label>Docker hub user:<span class="asterisk">*</span></label>
+        <input type="text" ng-model="DockerPushUser">
+        <span class="form_error" ng-show="GOINPUTNAME[DockerPushUser].$error.server">{{GOINPUTNAME[DockerPushUser].$error.server}}</span>
+    </div>
+</div>
