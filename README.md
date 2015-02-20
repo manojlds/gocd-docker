@@ -19,6 +19,8 @@ Use case - build and test the application in the container environment in which 
 
 If needed, we can push the built image to Dockerhub.
 
+It is possible to optionally choose any one or a combination of these.
+
 ## Pending tasks
 
 [ ] Support private registry
