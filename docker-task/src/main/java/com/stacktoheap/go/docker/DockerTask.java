@@ -1,5 +1,6 @@
 package com.stacktoheap.go.docker;
 
+import com.google.gson.GsonBuilder;
 import com.thoughtworks.go.plugin.api.GoApplicationAccessor;
 import com.thoughtworks.go.plugin.api.GoPlugin;
 import com.thoughtworks.go.plugin.api.GoPluginIdentifier;
@@ -10,8 +11,8 @@ import com.thoughtworks.go.plugin.api.request.GoPluginApiRequest;
 import com.thoughtworks.go.plugin.api.response.DefaultGoApiResponse;
 import com.thoughtworks.go.plugin.api.response.DefaultGoPluginApiResponse;
 import com.thoughtworks.go.plugin.api.response.GoPluginApiResponse;
+import com.thoughtworks.go.plugin.api.task.JobConsoleLogger;
 import org.apache.commons.io.IOUtils;
-import com.google.gson.GsonBuilder;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.Arrays;
@@ -98,8 +99,14 @@ public class DockerTask implements GoPlugin {
         return true;
     }
 
-    private GoPluginApiResponse handleTaskExecution(GoPluginApiRequest request) {
-        return null;
+    private GoPluginApiResponse     handleTaskExecution(GoPluginApiRequest request) {
+        DockerTaskExecutor executor = new DockerTaskExecutor();
+        Map executionRequest = (Map) new GsonBuilder().create().fromJson(request.requestBody(), Object.class);
+        Map config = (Map) executionRequest.get("config");
+        Map context = (Map) executionRequest.get("context");
+
+        Result result = executor.execute(new Config(config), new Context(context), JobConsoleLogger.getConsoleLogger());
+        return createResponse(result.responseCode(), result.toMap());
     }
 
     private GoPluginApiResponse handleGetConfigRequest() {
@@ -162,6 +169,4 @@ public class DockerTask implements GoPlugin {
         response.setResponseBody(new GsonBuilder().serializeNulls().create().toJson(body));
         return response;
     }
-
-
 }
