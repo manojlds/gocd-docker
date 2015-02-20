@@ -9,6 +9,7 @@
     <div class="form_item_block" >
         <label>Dockerfile path:<span class="asterisk">*</span></label>
         <input type="text" ng-model="DockerFile">
+        <span class="form_error" ng-show="GOINPUTNAME[DockerFile].$error.server">{{GOINPUTNAME[DockerFile].$error.server}}</span>
     </div>
     <div class="form_item_block" >
         <label>Tag:</label>
@@ -26,6 +27,7 @@
     <div class="form_item_block" >
         <label>Script path:<span class="asterisk">*</span></label>
         <input type="text" ng-model="DockerRunScript">
+        <span class="form_error" ng-show="GOINPUTNAME[DockerRunScript].$error.server">{{GOINPUTNAME[DockerRunScript].$error.server}}</span>
     </div>
     <div class="form_item_block" >
         <label>Arguments:</label>

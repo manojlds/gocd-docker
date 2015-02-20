@@ -12,6 +12,7 @@ import com.thoughtworks.go.plugin.api.response.DefaultGoPluginApiResponse;
 import com.thoughtworks.go.plugin.api.response.GoPluginApiResponse;
 import org.apache.commons.io.IOUtils;
 import com.google.gson.GsonBuilder;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -55,7 +56,46 @@ public class DockerTask implements GoPlugin {
     }
 
     private GoPluginApiResponse handleValidation(GoPluginApiRequest request) {
-        return null;
+        HashMap validationResult = new HashMap();
+        int responseCode = DefaultGoPluginApiResponse.SUCCESS_RESPONSE_CODE;
+        Map configMap = (Map) new GsonBuilder().create().fromJson(request.requestBody(), Object.class);
+
+        boolean dockerBuildStatus = validateDockerBuild(validationResult, configMap);
+
+        boolean dockerRunStatus = validateDockerRun(validationResult, configMap);
+
+        if(!dockerBuildStatus || !dockerRunStatus)
+            responseCode = DefaultGoPluginApiResponse.VALIDATION_FAILED;
+
+        return createResponse(responseCode, validationResult);
+    }
+
+    private boolean validateDockerRun(HashMap validationResult, Map configMap) {
+        if(((Map)configMap.get(IS_DOCKER_RUN)).get("value").equals("true")) {
+            String runScript = (String) ((Map)configMap.get(DOCKER_RUN_SCRIPT)).get("value");
+            if(StringUtils.isBlank(runScript)) {
+                HashMap errorMap = new HashMap();
+                errorMap.put(DOCKER_RUN_SCRIPT, "Script to be run must be specified");
+                validationResult.put("errors", errorMap);
+                return false;
+            }
+
+        }
+        return true;
+    }
+
+    private boolean validateDockerBuild(HashMap validationResult, Map configMap) {
+        if(((Map)configMap.get(IS_DOCKER_BUILD)).get("value").equals("true")) {
+            String dockerFile = (String) ((Map)configMap.get(DOCKERFILE)).get("value");
+            if(StringUtils.isBlank(dockerFile)) {
+                HashMap errorMap = new HashMap();
+                errorMap.put(DOCKERFILE, "Dockerfile path needs to be specified");
+                validationResult.put("errors", errorMap);
+                return false;
+            }
+
+        }
+        return true;
     }
 
     private GoPluginApiResponse handleTaskExecution(GoPluginApiRequest request) {
@@ -64,11 +104,8 @@ public class DockerTask implements GoPlugin {
 
     private GoPluginApiResponse handleGetConfigRequest() {
         HashMap config = new HashMap();
-
         addDockerBuildConfig(config);
-
         addDockerRunConfig(config);
-
 
         return createResponse(DefaultGoPluginApiResponse.SUCCESS_RESPONSE_CODE, config);
     }
@@ -80,10 +117,12 @@ public class DockerTask implements GoPlugin {
         config.put(IS_DOCKER_RUN, isDockerRun);
 
         HashMap dockerRunScript = new HashMap();
-        dockerRunScript.put("default-value", ".");
+        dockerRunScript.put("default-value", "");
+        dockerRunScript.put("required", false);
         config.put(DOCKER_RUN_SCRIPT, dockerRunScript);
 
         HashMap dockerRunArguments = new HashMap();
+        dockerRunArguments.put("required", false);
         config.put(DOCKER_RUN_ARGUMENTS, dockerRunArguments);
     }
 
@@ -95,9 +134,11 @@ public class DockerTask implements GoPlugin {
 
         HashMap dockerFilePath = new HashMap();
         dockerFilePath.put("default-value", ".");
+        dockerFilePath.put("required", false);
         config.put(DOCKERFILE, dockerFilePath);
 
         HashMap dockerBuildTag = new HashMap();
+        dockerBuildTag.put("required", false);
         config.put(DOCKER_BUILD_TAG, dockerBuildTag);
     }
 
