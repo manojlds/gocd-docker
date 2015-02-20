@@ -6,6 +6,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 
@@ -21,17 +22,27 @@ public class DockerTaskExecutor {
 
     private Result runCommand(Context taskContext, Config taskConfig, JobConsoleLogger console) throws IOException, InterruptedException {
 
-        if(taskConfig.isDockerBuild) {
-            ProcessBuilder dockerBuild = createDockerBuildCommandWithOptions(taskContext, taskConfig);
-            Process dockerBuildProcess = dockerBuild.start();
+        try {
+            if (taskConfig.isDockerBuild) {
+                ProcessBuilder dockerBuild = createDockerBuildCommandWithOptions(taskContext, taskConfig);
+                Process dockerBuildProcess = dockerBuild.start();
 
-            return runProcess(console, dockerBuildProcess, "Built image successfully");
-        } else {
-            return null;
+                runProcess(console, dockerBuildProcess);
+            }
+            if (taskConfig.isDockerRun) {
+                ProcessBuilder dockerRun = createDockerRunCommandWithOptions(taskContext, taskConfig);
+                Process dockerRunProcess = dockerRun.start();
+
+                runProcess(console, dockerRunProcess);
+            }
+
+            return new Result(true, "Finished");
+        } catch(Exception ex) {
+            return new Result(false, "Failed", ex);
         }
     }
 
-    private Result runProcess(JobConsoleLogger console, Process process, String successMessage) throws InterruptedException {
+    private void runProcess(JobConsoleLogger console, Process process) throws Exception {
         console.readErrorOf(process.getErrorStream());
         console.readOutputOf(process.getInputStream());
 
@@ -39,10 +50,28 @@ public class DockerTaskExecutor {
         process.destroy();
 
         if (exitCode != 0) {
-            return new Result(false, "Failure while running task");
+            throw new Exception("Failed while running task");
+        }
+    }
+
+    ProcessBuilder createDockerRunCommandWithOptions(Context taskContext, Config taskConfig) {
+
+        List<String> command = new ArrayList<>();
+        command.add("docker");
+        command.add("run");
+        command.add("-v");
+        command.add(String.format("%s:/build", taskContext.getWorkingDir()));
+
+        command.add(taskConfig.dockerBuildTag);
+
+        String scriptFilePath = FilenameUtils.concat("/build", taskConfig.dockerRunScript);
+        command.add(scriptFilePath);
+
+        if(!StringUtils.isBlank(taskConfig.dockerRunArguments)) {
+            Collections.addAll(command, taskConfig.dockerRunArguments.split("[\r\n]+"));
         }
 
-        return new Result(true, successMessage);
+        return new ProcessBuilder(command);
     }
 
     ProcessBuilder createDockerBuildCommandWithOptions(Context taskContext, Config taskConfig) {
