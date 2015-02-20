@@ -1,0 +1,12 @@
+<div class="form_item_block">
+    <div class="checkbox_row">
+        <input id="IsDockerBuild2" type="checkbox" ng-model="IsDockerBuild2" ng-init="IsDockerBuild2 = IsDockerBuild" ng-change="IsDockerBuild = IsDockerBuild2" ng-true-value="true" ng-false-value="false">
+        <input id="IsDockerBuild" type="hidden" ng-model="IsDockerBuild" value="{{IsDockerBuild}}">
+        <label for="IsDockerBuild">Build docker image</label>
+    </div>
+</div>
+
+<div class="form_item_block" ng-show="IsDockerBuild == 'true'">
+    <label>Dockerfile path:<span class="asterisk">*</span></label>
+    <input type="text" ng-model="DockerFile" ng-required="true">
+</div>
