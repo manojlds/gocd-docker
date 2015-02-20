@@ -21,7 +21,12 @@ import java.util.Map;
 public class DockerTask implements GoPlugin {
 
     public static final String IS_DOCKER_BUILD = "IsDockerBuild";
+    public static final String DOCKER_BUILD_TAG = "DockerBuildTag";
     public static final String DOCKERFILE = "DockerFile";
+
+    public static final String IS_DOCKER_RUN = "IsDockerRun";
+    public static final String DOCKER_RUN_SCRIPT = "DockerRunScript";
+    public static final String DOCKER_RUN_ARGUMENTS = "DockerRunArguments";
 
     Logger logger = Logger.getLoggerFor(DockerTask.class);
 
@@ -60,6 +65,29 @@ public class DockerTask implements GoPlugin {
     private GoPluginApiResponse handleGetConfigRequest() {
         HashMap config = new HashMap();
 
+        addDockerBuildConfig(config);
+
+        addDockerRunConfig(config);
+
+
+        return createResponse(DefaultGoPluginApiResponse.SUCCESS_RESPONSE_CODE, config);
+    }
+
+    private void addDockerRunConfig(HashMap config) {
+        HashMap isDockerRun = new HashMap();
+        isDockerRun.put("default-value", "false");
+        isDockerRun.put("required", true);
+        config.put(IS_DOCKER_RUN, isDockerRun);
+
+        HashMap dockerRunScript = new HashMap();
+        dockerRunScript.put("default-value", ".");
+        config.put(DOCKER_RUN_SCRIPT, dockerRunScript);
+
+        HashMap dockerRunArguments = new HashMap();
+        config.put(DOCKER_RUN_ARGUMENTS, dockerRunArguments);
+    }
+
+    private void addDockerBuildConfig(HashMap config) {
         HashMap isDockerBuild = new HashMap();
         isDockerBuild.put("default-value", "true");
         isDockerBuild.put("required", true);
@@ -69,8 +97,8 @@ public class DockerTask implements GoPlugin {
         dockerFilePath.put("default-value", ".");
         config.put(DOCKERFILE, dockerFilePath);
 
-
-        return createResponse(DefaultGoPluginApiResponse.SUCCESS_RESPONSE_CODE, config);
+        HashMap dockerBuildTag = new HashMap();
+        config.put(DOCKER_BUILD_TAG, dockerBuildTag);
     }
 
     private GoPluginApiResponse handleTaskView() {
