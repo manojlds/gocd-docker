@@ -59,8 +59,9 @@ public class DockerTaskExecutor {
         List<String> command = new ArrayList<>();
         command.add("docker");
         command.add("run");
+
         command.add("-v");
-        command.add(String.format("%s:/build", taskContext.getWorkingDir()));
+        command.add(String.format("%s:/build", taskContext.getAbsoluteWorkingDir()));
 
         command.add(taskConfig.dockerBuildTag);
 
