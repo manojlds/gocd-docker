@@ -15,6 +15,8 @@ If needed, we can run a script against the built image.
 
 Use case - build and test the application in the container environment in which it will actually run.
 
+During run, the entire working directory is mounted as volume into the container, and the specified script (along with the optional arguments) is run in the container.
+
 ## Publish
 
 If needed, we can push the built image to Dockerhub.
@@ -23,5 +25,5 @@ It is possible to optionally choose any one or a combination of these.
 
 ## Pending tasks
 
-[ ] Support private registry
-[ ] More options while running, like setting specific environment variables
+- [ ] Support private registry
+- [ ] More options while running, like setting specific environment variables
