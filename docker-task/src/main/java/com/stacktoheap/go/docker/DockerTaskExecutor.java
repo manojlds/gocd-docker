@@ -35,6 +35,12 @@ public class DockerTaskExecutor {
 
                 runProcess(console, dockerRunProcess);
             }
+            if (taskConfig.isDockerPush) {
+                ProcessBuilder dockerPush = createDockerPushCommandWithOptions(taskContext, taskConfig);
+                Process dockerPushProcess = dockerPush.start();
+
+                runProcess(console, dockerPushProcess);
+            }
 
             return new Result(true, "Finished");
         } catch(Exception ex) {
@@ -52,6 +58,17 @@ public class DockerTaskExecutor {
         if (exitCode != 0) {
             throw new Exception("Failed while running task");
         }
+    }
+
+    ProcessBuilder createDockerPushCommandWithOptions(Context taskContext, Config taskConfig) {
+
+        List<String> command = new ArrayList<>();
+        command.add("docker");
+        command.add("push");
+
+        command.add(String.format("%s/%s", taskConfig.dockerPushUser, taskConfig.dockerBuildTag));
+
+        return new ProcessBuilder(command);
     }
 
     ProcessBuilder createDockerRunCommandWithOptions(Context taskContext, Config taskConfig) {

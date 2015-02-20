@@ -30,6 +30,9 @@ public class DockerTask implements GoPlugin {
     public static final String DOCKER_RUN_SCRIPT = "DockerRunScript";
     public static final String DOCKER_RUN_ARGUMENTS = "DockerRunArguments";
 
+    public static final String IS_DOCKER_PUSH = "IsDockerPush";
+    public static final String DOCKER_PUSH_USER = "DockerPushUser";
+
     Logger logger = Logger.getLoggerFor(DockerTask.class);
 
     @Override
@@ -65,10 +68,26 @@ public class DockerTask implements GoPlugin {
 
         boolean dockerRunStatus = validateDockerRun(validationResult, configMap);
 
-        if(!dockerBuildStatus || !dockerRunStatus)
+        boolean dockerPushStatus = validateDockerPush(validationResult, configMap);
+
+        if(!dockerBuildStatus || !dockerRunStatus || !dockerPushStatus)
             responseCode = DefaultGoPluginApiResponse.VALIDATION_FAILED;
 
         return createResponse(responseCode, validationResult);
+    }
+
+    private boolean validateDockerPush(HashMap validationResult, Map configMap) {
+        if(((Map)configMap.get(IS_DOCKER_PUSH)).get("value").equals("true")) {
+            String dockerPushUser = (String) ((Map)configMap.get(DOCKER_PUSH_USER)).get("value");
+            if(StringUtils.isBlank(dockerPushUser)) {
+                HashMap errorMap = new HashMap();
+                errorMap.put(DOCKER_PUSH_USER, "Docker hub user must be specified");
+                validationResult.put("errors", errorMap);
+                return false;
+            }
+
+        }
+        return true;
     }
 
     private boolean validateDockerRun(HashMap validationResult, Map configMap) {
@@ -99,7 +118,7 @@ public class DockerTask implements GoPlugin {
         return true;
     }
 
-    private GoPluginApiResponse     handleTaskExecution(GoPluginApiRequest request) {
+    private GoPluginApiResponse handleTaskExecution(GoPluginApiRequest request) {
         DockerTaskExecutor executor = new DockerTaskExecutor();
         Map executionRequest = (Map) new GsonBuilder().create().fromJson(request.requestBody(), Object.class);
         Map config = (Map) executionRequest.get("config");
@@ -113,8 +132,21 @@ public class DockerTask implements GoPlugin {
         HashMap config = new HashMap();
         addDockerBuildConfig(config);
         addDockerRunConfig(config);
+        addDockerPushConfig(config);
 
         return createResponse(DefaultGoPluginApiResponse.SUCCESS_RESPONSE_CODE, config);
+    }
+
+    private void addDockerPushConfig(HashMap config) {
+        HashMap isDockerPush = new HashMap();
+        isDockerPush.put("default-value", "false");
+        isDockerPush.put("required", true);
+        config.put(IS_DOCKER_PUSH, isDockerPush);
+
+        HashMap dockerPushUser = new HashMap();
+        dockerPushUser.put("default-value", "");
+        dockerPushUser.put("required", false);
+        config.put(DOCKER_PUSH_USER, dockerPushUser);
     }
 
     private void addDockerRunConfig(HashMap config) {

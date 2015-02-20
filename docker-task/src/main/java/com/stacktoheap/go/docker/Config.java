@@ -11,6 +11,9 @@ public class Config {
     public final String dockerRunScript;
     public final String dockerRunArguments;
 
+    public final boolean isDockerPush;
+    public final String dockerPushUser;
+
     public Config(Map config) {
         isDockerBuild = getValue(config, DockerTask.IS_DOCKER_BUILD).equals("true");
         dockerBuildTag = getValue(config, DockerTask.DOCKER_BUILD_TAG);
@@ -19,6 +22,9 @@ public class Config {
         isDockerRun = getValue(config, DockerTask.IS_DOCKER_RUN).equals("true");
         dockerRunScript = getValue(config, DockerTask.DOCKER_RUN_SCRIPT);
         dockerRunArguments = getValue(config, DockerTask.DOCKER_RUN_ARGUMENTS);
+
+        isDockerPush = getValue(config, DockerTask.IS_DOCKER_PUSH).equals("true");
+        dockerPushUser = getValue(config, DockerTask.DOCKER_PUSH_USER);
     }
 
     private String getValue(Map config, String property) {
