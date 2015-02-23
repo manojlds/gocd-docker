@@ -114,7 +114,7 @@ public class DockerTaskExecutor {
         command.add("-v");
         command.add(String.format("%s:/build", taskContext.getAbsoluteWorkingDir()));
 
-        command.add(taskConfig.dockerBuildTag);
+        command.add(getTemporaryImageTag(taskContext));
 
         String scriptFilePath = FilenameUtils.concat("/build", taskConfig.dockerRunScript);
         command.add(scriptFilePath);
