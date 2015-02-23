@@ -29,4 +29,9 @@ public class DockerRunCommand extends DockerCommand {
             Collections.addAll(command, taskConfig.dockerRunArguments.split("[\r\n]+"));
         }
     }
+
+    @Override
+    protected boolean shouldRun(Context taskContext, Config taskConfig) {
+        return taskConfig.isDockerRun;
+    }
 }

@@ -8,17 +8,23 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class DockerCommand {
+    protected final boolean isApplicable;
     protected List<String> command = new ArrayList<>();
     protected static JobConsoleLogger logger = JobConsoleLogger.getConsoleLogger();
 
     public DockerCommand(Context taskContext, Config taskConfig) {
         command.add("docker");
         buildCommand(taskContext, taskConfig);
+        isApplicable = shouldRun(taskContext, taskConfig);
     }
 
     protected abstract void buildCommand(Context taskContext, Config taskConfig);
 
+    protected abstract boolean shouldRun(Context taskContext, Config taskConfig);
+
     public void run() throws Exception {
+        if(!isApplicable) return;
+
         ProcessBuilder processBuilder = new ProcessBuilder(command);
         Process process = processBuilder.start();
         logger.readErrorOf(process.getErrorStream());

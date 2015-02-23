@@ -2,6 +2,7 @@ package com.stacktoheap.go.docker.Commands;
 
 import com.stacktoheap.go.docker.Config;
 import com.stacktoheap.go.docker.Context;
+import org.apache.commons.lang3.StringUtils;
 
 public class DockerTagCommand extends DockerCommand {
 
@@ -17,6 +18,11 @@ public class DockerTagCommand extends DockerCommand {
         String tag = getDockerBuildTag(taskContext, taskConfig);
 
         command.add(tag);
+    }
+
+    @Override
+    protected boolean shouldRun(Context taskContext, Config taskConfig) {
+        return taskConfig.isDockerBuild && !StringUtils.isBlank(taskConfig.dockerBuildTag);
     }
 }
 

@@ -21,5 +21,10 @@ public class DockerBuildCommand extends DockerCommand {
         String dockerFilePath = FilenameUtils.concat(taskContext.getWorkingDir(), taskConfig.dockerFile);
         command.add(dockerFilePath);
     }
+
+    @Override
+    protected boolean shouldRun(Context taskContext, Config taskConfig) {
+        return taskConfig.isDockerBuild;
+    }
 }
 

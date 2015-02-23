@@ -14,4 +14,9 @@ public class DockerCleanupCommand extends DockerCommand {
         command.add("rmi");
         command.add(getTemporaryImageTag(taskContext));
     }
+
+    @Override
+    protected boolean shouldRun(Context taskContext, Config taskConfig) {
+        return taskConfig.isDockerBuild;
+    }
 }

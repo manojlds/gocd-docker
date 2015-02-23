@@ -15,4 +15,9 @@ public class DockerPushCommand extends DockerCommand {
 
         command.add(String.format("%s/%s", taskConfig.dockerPushUser, getDockerBuildTag(taskContext, taskConfig)));
     }
+
+    @Override
+    protected boolean shouldRun(Context taskContext, Config taskConfig) {
+        return taskConfig.isDockerPush;
+    }
 }
