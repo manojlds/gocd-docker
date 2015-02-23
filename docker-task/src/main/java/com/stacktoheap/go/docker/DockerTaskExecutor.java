@@ -1,21 +1,19 @@
 package com.stacktoheap.go.docker;
 
 import com.stacktoheap.go.docker.Commands.*;
-import com.thoughtworks.go.plugin.api.task.JobConsoleLogger;
-import org.apache.commons.lang3.StringUtils;
 
 
 public class DockerTaskExecutor {
-    public Result execute(Config config, Context context, JobConsoleLogger console) {
+    public Result execute(Config config, Context context) {
 
         try {
-            return runCommand(context, config, console);
+            return runCommand(context, config);
         } catch (Exception e) {
             return new Result(false, "Failed while running the task", e);
         }
     }
 
-    private Result runCommand(Context taskContext, Config taskConfig, JobConsoleLogger console) throws Exception {
+    private Result runCommand(Context taskContext, Config taskConfig) throws Exception {
         try {
             new DockerBuildCommand(taskContext, taskConfig).run();
             new DockerTagCommand(taskContext, taskConfig).run();

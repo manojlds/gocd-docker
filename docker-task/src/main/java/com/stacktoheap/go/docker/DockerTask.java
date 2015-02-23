@@ -11,7 +11,6 @@ import com.thoughtworks.go.plugin.api.request.GoPluginApiRequest;
 import com.thoughtworks.go.plugin.api.response.DefaultGoApiResponse;
 import com.thoughtworks.go.plugin.api.response.DefaultGoPluginApiResponse;
 import com.thoughtworks.go.plugin.api.response.GoPluginApiResponse;
-import com.thoughtworks.go.plugin.api.task.JobConsoleLogger;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 
@@ -125,7 +124,7 @@ public class DockerTask implements GoPlugin {
         Map config = (Map) executionRequest.get("config");
         Map context = (Map) executionRequest.get("context");
 
-        Result result = executor.execute(new Config(config), new Context(context), JobConsoleLogger.getConsoleLogger());
+        Result result = executor.execute(new Config(config), new Context(context));
         return createResponse(result.responseCode(), result.toMap());
     }
 
