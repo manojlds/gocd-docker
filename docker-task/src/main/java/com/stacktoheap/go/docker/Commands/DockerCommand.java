@@ -7,7 +7,7 @@ import com.thoughtworks.go.plugin.api.task.JobConsoleLogger;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class DockerCommand {
+public abstract class DockerCommand implements Command {
     protected final boolean isApplicable;
     protected List<String> command = new ArrayList<>();
     protected static JobConsoleLogger logger = JobConsoleLogger.getConsoleLogger();

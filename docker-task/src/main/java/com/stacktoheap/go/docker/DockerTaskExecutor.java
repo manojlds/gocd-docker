@@ -15,8 +15,7 @@ public class DockerTaskExecutor {
 
     private Result runCommand(Context taskContext, Config taskConfig) throws Exception {
         try {
-            new DockerBuildCommand(taskContext, taskConfig).run();
-            new DockerTagCommand(taskContext, taskConfig).run();
+            new DockerBuildWithTagCommand(taskContext, taskConfig).run();
             new DockerRunCommand(taskContext, taskConfig).run();
             new DockerPushCommand(taskContext, taskConfig).run();
 
