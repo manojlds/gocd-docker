@@ -15,16 +15,16 @@ public abstract class DockerCompositeCommand implements Command {
 
     protected abstract void setupCommands(Context taskContext, Config taskConfig);
 
-    protected DockerCompositeCommand addCommand(Command command) {
+    public DockerCompositeCommand addCommand(Command command) {
         commands.add(command);
         return this;
     }
 
-    protected DockerCompositeCommand runCommand(Command command) {
+    public DockerCompositeCommand runCommand(Command command) {
         return addCommand(command);
     }
 
-    protected DockerCompositeCommand then(Command command) {
+    public DockerCompositeCommand then(Command command) {
         return addCommand(command);
     }
 
