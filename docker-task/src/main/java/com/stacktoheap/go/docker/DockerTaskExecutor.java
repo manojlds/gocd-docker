@@ -20,14 +20,19 @@ public class DockerTaskExecutor {
         }
     }
 
-    private Result runCommand(Context taskContext, Config taskConfig, JobConsoleLogger console) throws IOException, InterruptedException {
-
+    private Result runCommand(Context taskContext, Config taskConfig, JobConsoleLogger console) throws Exception {
         try {
             if (taskConfig.isDockerBuild) {
                 ProcessBuilder dockerBuild = createDockerBuildCommandWithOptions(taskContext, taskConfig);
                 Process dockerBuildProcess = dockerBuild.start();
 
                 runProcess(console, dockerBuildProcess);
+            }
+            if (taskConfig.isDockerBuild && !StringUtils.isBlank(taskConfig.dockerBuildTag)) {
+                ProcessBuilder dockerTag = createDockerTagCommand(taskContext, taskConfig);
+                Process dockerTagProcess = dockerTag.start();
+
+                runProcess(console, dockerTagProcess);
             }
             if (taskConfig.isDockerRun) {
                 ProcessBuilder dockerRun = createDockerRunCommandWithOptions(taskContext, taskConfig);
@@ -45,6 +50,13 @@ public class DockerTaskExecutor {
             return new Result(true, "Finished");
         } catch(Exception ex) {
             return new Result(false, "Failed", ex);
+        } finally {
+            if(taskConfig.isDockerBuild) {
+                ProcessBuilder cleanup = createCleanupCommand(taskContext, taskConfig);
+                Process cleanupProcess = cleanup.start();
+
+                runProcess(console, cleanupProcess);
+            }
         }
     }
 
@@ -60,18 +72,40 @@ public class DockerTaskExecutor {
         }
     }
 
-    ProcessBuilder createDockerPushCommandWithOptions(Context taskContext, Config taskConfig) {
+    private ProcessBuilder createDockerTagCommand(Context taskContext, Config taskConfig) {
+        List<String> command = new ArrayList<>();
+        command.add("docker");
+        command.add("tag");
+        command.add(getTemporaryImageTag(taskContext));
+
+        String tag = getDockerBuildTag(taskContext, taskConfig);
+
+        command.add(tag);
+
+        return new ProcessBuilder(command);
+    }
+
+    private ProcessBuilder createCleanupCommand(Context taskContext, Config taskConfig) {
+        List<String> command = new ArrayList<>();
+        command.add("docker");
+        command.add("rmi");
+        command.add(getTemporaryImageTag(taskContext));
+
+        return new ProcessBuilder(command);
+    }
+
+    private ProcessBuilder createDockerPushCommandWithOptions(Context taskContext, Config taskConfig) {
 
         List<String> command = new ArrayList<>();
         command.add("docker");
         command.add("push");
 
-        command.add(String.format("%s/%s", taskConfig.dockerPushUser, taskConfig.dockerBuildTag));
+        command.add(String.format("%s/%s", taskConfig.dockerPushUser, getDockerBuildTag(taskContext, taskConfig)));
 
         return new ProcessBuilder(command);
     }
 
-    ProcessBuilder createDockerRunCommandWithOptions(Context taskContext, Config taskConfig) {
+    private ProcessBuilder createDockerRunCommandWithOptions(Context taskContext, Config taskConfig) {
 
         List<String> command = new ArrayList<>();
         command.add("docker");
@@ -92,20 +126,28 @@ public class DockerTaskExecutor {
         return new ProcessBuilder(command);
     }
 
-    ProcessBuilder createDockerBuildCommandWithOptions(Context taskContext, Config taskConfig) {
+    private ProcessBuilder createDockerBuildCommandWithOptions(Context taskContext, Config taskConfig) {
 
         List<String> command = new ArrayList<>();
         command.add("docker");
         command.add("build");
 
-        if(!StringUtils.isBlank(taskConfig.dockerBuildTag)) {
-            command.add("-t");
-            command.add(taskConfig.dockerBuildTag);
-        }
-        String dockerFilePath = FilenameUtils.concat(taskContext.getWorkingDir(), taskConfig.dockerFile);
+        command.add("-t");
+        command.add(getTemporaryImageTag(taskContext));
 
+        String dockerFilePath = FilenameUtils.concat(taskContext.getWorkingDir(), taskConfig.dockerFile);
         command.add(dockerFilePath);
 
         return new ProcessBuilder(command);
+    }
+
+    private String getDockerBuildTag(Context taskContext, Config taskConfig) {
+        return taskConfig.addPipelineLabel ?
+                String.format("%s:%s", taskConfig.dockerBuildTag, taskContext.getPipelineLabel()) :
+                taskConfig.dockerBuildTag;
+    }
+
+    private String getTemporaryImageTag(Context taskContext) {
+        return String.format("docker-task:%s", taskContext.getPipelineLabel());
     }
 }

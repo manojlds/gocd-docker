@@ -16,6 +16,10 @@ public class Context {
         return environmentVariables;
     }
 
+    public String getPipelineLabel() {
+        return environmentVariables.get("GO_PIPELINE_LABEL").toString();
+    }
+
     public String getWorkingDir() {
         return workingDir;
     }

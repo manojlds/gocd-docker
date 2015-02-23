@@ -6,6 +6,7 @@ public class Config {
     public final boolean isDockerBuild;
     public final String dockerBuildTag;
     public final String dockerFile;
+    public final boolean addPipelineLabel;
 
     public final boolean isDockerRun;
     public final String dockerRunScript;
@@ -18,6 +19,7 @@ public class Config {
         isDockerBuild = getValue(config, DockerTask.IS_DOCKER_BUILD).equals("true");
         dockerBuildTag = getValue(config, DockerTask.DOCKER_BUILD_TAG);
         dockerFile = getValue(config, DockerTask.DOCKERFILE);
+        addPipelineLabel = getValue(config, DockerTask.TAG_WITH_PIPELINE_LABEL).equals("true");
 
         isDockerRun = getValue(config, DockerTask.IS_DOCKER_RUN).equals("true");
         dockerRunScript = getValue(config, DockerTask.DOCKER_RUN_SCRIPT);

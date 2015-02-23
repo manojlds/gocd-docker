@@ -5,15 +5,22 @@
         <label for="IsDockerBuild">Build docker image</label>
     </div>
 </div>
-<div class="docker_build" ng-show="IsDockerBuild == 'true'">
-    <div class="form_item_block" >
-        <label>Dockerfile path:<span class="asterisk">*</span></label>
-        <input type="text" ng-model="DockerFile">
-        <span class="form_error" ng-show="GOINPUTNAME[DockerFile].$error.server">{{GOINPUTNAME[DockerFile].$error.server}}</span>
-    </div>
-    <div class="form_item_block" >
-        <label>Tag:</label>
-        <input type="text" ng-model="DockerBuildTag">
+<div class="form_item_block">
+    <div class="docker_build" ng-show="IsDockerBuild == 'true'">
+        <div class="form_item_block" >
+            <label>Dockerfile path:<span class="asterisk">*</span></label>
+            <input type="text" ng-model="DockerFile">
+            <span class="form_error" ng-show="GOINPUTNAME[DockerFile].$error.server">{{GOINPUTNAME[DockerFile].$error.server}}</span>
+        </div>
+        <div class="form_item_block" >
+            <label>Tag name:</label>
+            <input type="text" ng-model="DockerBuildTag">
+        </div>
+        <div class="checkbox_row" ng-show="DockerBuildTag">
+            <input id="TagWithPipelineLabel2" type="checkbox" ng-model="TagWithPipelineLabel2" ng-init="TagWithPipelineLabel2 = TagWithPipelineLabel" ng-change="TagWithPipelineLabel = TagWithPipelineLabel2" ng-true-value="true" ng-false-value="false">
+            <input id="TagWithPipelineLabel" type="hidden" ng-model="TagWithPipelineLabel" value="{{TagWithPipelineLabel}}">
+            <label for="TagWithPipelineLabel">Include pipeline label (tag_name:GO_PIPELINE_LABEL)</label>
+        </div>
     </div>
 </div>
 <div class="form_item_block">
@@ -23,15 +30,17 @@
         <label for="IsDockerRun">Run command in docker image</label>
     </div>
 </div>
-<div class="docker_build" ng-show="IsDockerRun == 'true'">
-    <div class="form_item_block" >
-        <label>Script path:<span class="asterisk">*</span></label>
-        <input type="text" ng-model="DockerRunScript">
-        <span class="form_error" ng-show="GOINPUTNAME[DockerRunScript].$error.server">{{GOINPUTNAME[DockerRunScript].$error.server}}</span>
-    </div>
-    <div class="form_item_block" >
-        <label>Arguments (one per line):</label>
-        <textarea ng-model="DockerRunArguments" wrap="off" style="width: 250px; resize: both;" cols="58" autocomplete="off"></textarea>
+<div class="form_item_block">
+    <div class="docker_run" ng-show="IsDockerRun == 'true'">
+        <div class="form_item_block" >
+            <label>Script path:<span class="asterisk">*</span></label>
+            <input type="text" ng-model="DockerRunScript">
+            <span class="form_error" ng-show="GOINPUTNAME[DockerRunScript].$error.server">{{GOINPUTNAME[DockerRunScript].$error.server}}</span>
+        </div>
+        <div class="form_item_block" >
+            <label>Arguments (one per line):</label>
+            <textarea ng-model="DockerRunArguments" wrap="off" style="width: 250px; resize: both;" cols="58" autocomplete="off"></textarea>
+        </div>
     </div>
 </div>
 <div class="form_item_block">
@@ -41,10 +50,12 @@
         <label for="IsDockerPush">Push image to registry</label>
     </div>
 </div>
-<div class="docker_build" ng-show="IsDockerPush == 'true'">
-    <div class="form_item_block" >
-        <label>Docker hub user:<span class="asterisk">*</span></label>
-        <input type="text" ng-model="DockerPushUser">
-        <span class="form_error" ng-show="GOINPUTNAME[DockerPushUser].$error.server">{{GOINPUTNAME[DockerPushUser].$error.server}}</span>
+<div class="form_item_block">
+    <div class="docker_push" ng-show="IsDockerPush == 'true'">
+        <div class="form_item_block" >
+            <label>Docker hub user:<span class="asterisk">*</span></label>
+            <input type="text" ng-model="DockerPushUser">
+            <span class="form_error" ng-show="GOINPUTNAME[DockerPushUser].$error.server">{{GOINPUTNAME[DockerPushUser].$error.server}}</span>
+        </div>
     </div>
 </div>

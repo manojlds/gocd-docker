@@ -25,6 +25,7 @@ public class DockerTask implements GoPlugin {
     public static final String IS_DOCKER_BUILD = "IsDockerBuild";
     public static final String DOCKER_BUILD_TAG = "DockerBuildTag";
     public static final String DOCKERFILE = "DockerFile";
+    public static final String TAG_WITH_PIPELINE_LABEL = "TagWithPipelineLabel";
 
     public static final String IS_DOCKER_RUN = "IsDockerRun";
     public static final String DOCKER_RUN_SCRIPT = "DockerRunScript";
@@ -179,6 +180,11 @@ public class DockerTask implements GoPlugin {
         HashMap dockerBuildTag = new HashMap();
         dockerBuildTag.put("required", false);
         config.put(DOCKER_BUILD_TAG, dockerBuildTag);
+
+        HashMap addPipelineLabel = new HashMap();
+        addPipelineLabel.put("default-value", "true");
+        addPipelineLabel.put("required", true);
+        config.put(TAG_WITH_PIPELINE_LABEL, addPipelineLabel);
     }
 
     private GoPluginApiResponse handleTaskView() {
