@@ -32,6 +32,7 @@ public class DockerTask implements GoPlugin {
 
     public static final String IS_DOCKER_PUSH = "IsDockerPush";
     public static final String DOCKER_PUSH_USER = "DockerPushUser";
+    public static final String REMOVE_AFTER_PUSH = "RemoveAfterPush";
 
     Logger logger = Logger.getLoggerFor(DockerTask.class);
 
@@ -147,6 +148,11 @@ public class DockerTask implements GoPlugin {
         dockerPushUser.put("default-value", "");
         dockerPushUser.put("required", false);
         config.put(DOCKER_PUSH_USER, dockerPushUser);
+
+        HashMap removeAfterPush = new HashMap();
+        removeAfterPush.put("default-value", "true");
+        removeAfterPush.put("required", true);
+        config.put(REMOVE_AFTER_PUSH, removeAfterPush);
     }
 
     private void addDockerRunConfig(HashMap config) {

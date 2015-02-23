@@ -3,20 +3,15 @@ package com.stacktoheap.go.docker.Commands;
 import com.stacktoheap.go.docker.Config;
 import com.stacktoheap.go.docker.Context;
 
-public class DockerCleanupCommand extends DockerCommand {
+public class DockerCleanupCommand extends DockerCompositeCommand {
 
     public DockerCleanupCommand(Context taskContext, Config taskConfig) {
         super(taskContext, taskConfig);
     }
 
     @Override
-    protected void buildCommand(Context taskContext, Config taskConfig) {
-        command.add("rmi");
-        command.add(getTemporaryImageTag(taskContext));
-    }
-
-    @Override
-    protected boolean shouldRun(Context taskContext, Config taskConfig) {
-        return taskConfig.isDockerBuild;
+    protected void setupCommands(Context taskContext, Config taskConfig) {
+        runCommand(new DockerBuildCleanupCommand(taskContext, taskConfig))
+                .then(new DockerPushCleanupCommand(taskContext, taskConfig));
     }
 }

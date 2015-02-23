@@ -1,5 +1,6 @@
 package com.stacktoheap.go.docker;
 
+import javax.print.Doc;
 import java.util.Map;
 
 public class Config {
@@ -14,6 +15,7 @@ public class Config {
 
     public final boolean isDockerPush;
     public final String dockerPushUser;
+    public final boolean removeAfterPush;
 
     public Config(Map config) {
         isDockerBuild = getValue(config, DockerTask.IS_DOCKER_BUILD).equals("true");
@@ -27,6 +29,7 @@ public class Config {
 
         isDockerPush = getValue(config, DockerTask.IS_DOCKER_PUSH).equals("true");
         dockerPushUser = getValue(config, DockerTask.DOCKER_PUSH_USER);
+        removeAfterPush = getValue(config, DockerTask.REMOVE_AFTER_PUSH).equals("true");
     }
 
     private String getValue(Map config, String property) {

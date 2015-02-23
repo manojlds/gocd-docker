@@ -4,7 +4,7 @@ import com.stacktoheap.go.docker.Config;
 import com.stacktoheap.go.docker.Context;
 import org.apache.commons.lang3.StringUtils;
 
-public class DockerTagCommand extends DockerCommand {
+public abstract class DockerTagCommand extends DockerCommand {
 
     public DockerTagCommand(Context taskContext, Config taskConfig) {
         super(taskContext, taskConfig);
@@ -15,10 +15,12 @@ public class DockerTagCommand extends DockerCommand {
         command.add("tag");
         command.add(getTemporaryImageTag(taskContext));
 
-        String tag = getDockerBuildTag(taskContext, taskConfig);
+        String tag = getTag(taskContext, taskConfig);
 
         command.add(tag);
     }
+
+    protected abstract String getTag(Context taskContext, Config taskConfig);
 
     @Override
     protected boolean shouldRun(Context taskContext, Config taskConfig) {

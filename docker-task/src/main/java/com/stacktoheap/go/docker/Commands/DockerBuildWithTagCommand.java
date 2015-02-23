@@ -11,6 +11,6 @@ public class DockerBuildWithTagCommand extends DockerCompositeCommand {
 
     @Override
     protected void setupCommands(Context taskContext, Config taskConfig) {
-        runCommand(new DockerBuildCommand(taskContext, taskConfig)).then(new DockerTagCommand(taskContext, taskConfig));
+        runCommand(new DockerBuildCommand(taskContext, taskConfig)).then(new DockerBuildTagCommand(taskContext, taskConfig));
     }
 }

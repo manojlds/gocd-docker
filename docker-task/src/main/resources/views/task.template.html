@@ -57,5 +57,10 @@
             <input type="text" ng-model="DockerPushUser">
             <span class="form_error" ng-show="GOINPUTNAME[DockerPushUser].$error.server">{{GOINPUTNAME[DockerPushUser].$error.server}}</span>
         </div>
+        <div class="checkbox_row" ng-show="DockerBuildTag">
+            <input id="RemoveAfterPush2" type="checkbox" ng-model="RemoveAfterPush2" ng-init="RemoveAfterPush2 = RemoveAfterPush" ng-change="RemoveAfterPush = RemoveAfterPush2" ng-true-value="true" ng-false-value="false">
+            <input id="RemoveAfterPush" type="hidden" ng-model="RemoveAfterPush" value="{{RemoveAfterPush}}">
+            <label for="RemoveAfterPush">Remove local image after push</label>
+        </div>
     </div>
 </div>

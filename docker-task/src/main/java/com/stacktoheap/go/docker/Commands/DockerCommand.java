@@ -47,5 +47,9 @@ public abstract class DockerCommand implements Command {
                 String.format("%s:%s", taskConfig.dockerBuildTag, taskContext.getPipelineLabel()) :
                 taskConfig.dockerBuildTag;
     }
+
+    protected String getDockerPushTag(Context taskContext, Config taskConfig) {
+        return String.format("%s/%s", taskConfig.dockerPushUser, getDockerBuildTag(taskContext, taskConfig));
+    }
 }
 
