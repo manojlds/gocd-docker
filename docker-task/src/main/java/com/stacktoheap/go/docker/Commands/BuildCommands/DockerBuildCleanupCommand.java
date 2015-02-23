@@ -1,5 +1,6 @@
-package com.stacktoheap.go.docker.Commands;
+package com.stacktoheap.go.docker.Commands.BuildCommands;
 
+import com.stacktoheap.go.docker.Commands.DockerCommand;
 import com.stacktoheap.go.docker.Config;
 import com.stacktoheap.go.docker.Context;
 

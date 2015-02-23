@@ -1,6 +1,9 @@
 package com.stacktoheap.go.docker;
 
 import com.stacktoheap.go.docker.Commands.*;
+import com.stacktoheap.go.docker.Commands.BuildCommands.DockerBuildWithTagCommand;
+import com.stacktoheap.go.docker.Commands.PushCommands.DockerTagAndPushCommand;
+import com.stacktoheap.go.docker.Commands.RunCommands.DockerRunCommand;
 
 
 public class DockerTaskExecutor {
