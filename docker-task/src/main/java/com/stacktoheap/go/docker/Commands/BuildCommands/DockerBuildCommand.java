@@ -13,7 +13,6 @@ public class DockerBuildCommand extends DockerCommand {
 
     @Override
     public void buildCommand(Context taskContext, Config taskConfig) {
-        command.add("docker");
         command.add("build");
 
         command.add("-t");
