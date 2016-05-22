@@ -1,4 +1,4 @@
-package com.stacktoheap.go.docker.Commands;
+package com.stacktoheap.go.docker.Commands.Base;
 
 import com.stacktoheap.go.docker.Config;
 import com.stacktoheap.go.docker.Context;
@@ -34,3 +34,4 @@ public abstract class DockerCompositeCommand implements Command {
         }
     }
 }
+

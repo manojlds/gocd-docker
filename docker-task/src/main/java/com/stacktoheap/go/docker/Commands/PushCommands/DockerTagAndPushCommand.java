@@ -1,6 +1,6 @@
 package com.stacktoheap.go.docker.Commands.PushCommands;
 
-import com.stacktoheap.go.docker.Commands.DockerCompositeCommand;
+import com.stacktoheap.go.docker.Commands.Base.DockerCompositeCommand;
 import com.stacktoheap.go.docker.Config;
 import com.stacktoheap.go.docker.Context;
 

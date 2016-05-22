@@ -1,6 +1,5 @@
 package com.stacktoheap.go.docker;
 
-import javax.print.Doc;
 import java.util.Map;
 
 public class Config {

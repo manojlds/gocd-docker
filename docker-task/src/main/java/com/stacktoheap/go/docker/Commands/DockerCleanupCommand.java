@@ -1,5 +1,6 @@
 package com.stacktoheap.go.docker.Commands;
 
+import com.stacktoheap.go.docker.Commands.Base.DockerCompositeCommand;
 import com.stacktoheap.go.docker.Commands.BuildCommands.DockerBuildCleanupCommand;
 import com.stacktoheap.go.docker.Commands.PushCommands.DockerPushCleanupCommand;
 import com.stacktoheap.go.docker.Config;
