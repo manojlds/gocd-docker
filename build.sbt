@@ -16,7 +16,6 @@ lazy val root = project in file(".") aggregate dockerTask
 lazy val commonSettings = Seq(
   organization := "com.stacktoheap",
   version := appVersion,
-  scalaVersion := "2.10.4",
   unmanagedBase := file(".") / "lib",
   libraryDependencies ++= Seq(
     apacheCommons, commonsIo, goPluginLibrary, gson, junit, hamcrest, mockito
