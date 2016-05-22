@@ -39,7 +39,9 @@ public abstract class DockerCommand implements Command {
     }
 
     protected String getTemporaryImageTag(Context taskContext) {
-        return String.format("docker-task:%s", taskContext.getPipelineLabel());
+        return String.format("docker-task-%s-%s-%s:%s",
+                taskContext.getPipelineName().toLowerCase(), taskContext.getStageName().toLowerCase(),
+                taskContext.getJobName().toLowerCase(), taskContext.getPipelineLabel().toLowerCase());
     }
 
     protected String getDockerBuildTag(Context taskContext, Config taskConfig) {
